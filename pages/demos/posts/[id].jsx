@@ -15,9 +15,11 @@ export async function getStaticPaths() {
 // get detail of post
 export async function getStaticProps({ params }) {
     const response = await Blogs.getBlogDetail(params.id);
-    return {
-        props: {
-            posts: response,
-        },
-    };
+    if (response) {
+        return {
+            props: {
+                posts: response,
+            },
+        };
+    }
 }
