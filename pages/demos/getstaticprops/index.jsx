@@ -10,7 +10,6 @@ function Blog({ posts }) {
     );
 }
 export async function getStaticProps(context) {
-    console.log('context :>> ', context);
     const response = await Blogs.getBlogList();
     if (response) {
         return {
