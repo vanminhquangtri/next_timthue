@@ -4,7 +4,6 @@ const appState = {
 };
 
 const appReducer = (state = appState, action) => {
-    console.log(`action`, action);
     switch (action.type) {
         case 'APP_SET_LOADING':
             return { ...state, loading: action.payload };
