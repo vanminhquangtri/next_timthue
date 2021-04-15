@@ -3,18 +3,27 @@ import Texts from 'src/constants/texts';
 
 export const requestApi = async (
     pathApi,
-    postData = Object(),
+    data = Object({
+        body: Object(),
+        params: Object(),
+    }),
     formData = null
 ) =>
     axios({
         url: Texts.host + pathApi,
-        method: Object['keys'](postData)['length'] || formData ? 'POST' : 'GET',
-        data: postData,
+        // data : {params:{}, body: {}}
+        // params for get method
+        // body for post method
+        method:
+            Object['keys'](data.body)['length'] || formData ? 'POST' : 'GET',
+        data: data.body,
+        params: data.params,
         headers: {
             'Content-Type': formData
                 ? 'multipart/form-data'
                 : 'application/json;charset=utf-8',
-            Authorization: 'Bearer ' + 111111111111111,
+            Authorization:
+                'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpLmF1dG9nb2xpa2UubmV0XC9hcGlcL2xvZ2luIiwiaWF0IjoxNjE4Mzk3NTM2LCJleHAiOjE2NDk5MzM1MzYsIm5iZiI6MTYxODM5NzUzNiwianRpIjoiWld6UFBUZ1hsdnpYdVdsZSIsInN1YiI6OSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.Rg1GY2ft0rLz30b5eVFy_wBzhD0EIjGoprJRvo0nDaY',
         },
     })
         .then((result) => {

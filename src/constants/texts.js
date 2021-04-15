@@ -1,5 +1,5 @@
 const Texts = {
-    host: 'https://jsonplaceholder.typicode.com/posts',
+    host: 'https://api.autogolike.net',
 };
 
 export default Texts;
