@@ -7,6 +7,8 @@ const Search = () => {
         action: '',
         // password: '',
     });
+    const limit = 5;
+    const page = 1;
     const changeData = (ev) => {
         setData((prev) => {
             return {
@@ -23,8 +25,20 @@ const Search = () => {
                 new Date().getTime() + 30 * 24 * 60 * 60 * 1000
             );
             document.cookie = `action=${data.action}; expires=${expDuration}; path =/`;
-            router.push('/demos/search-result');
+            document.cookie = `page=${1}; expires=${expDuration}; path =/`;
+            moveToSearchResult();
         }
+    };
+    const moveToSearchResult = () => {
+        const query = {
+            action: data.action,
+            limit,
+            page,
+        };
+        router.push({
+            pathname: '/demos/search-result',
+            query,
+        });
     };
     return (
         <div>

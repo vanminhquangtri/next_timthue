@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import Log from '../../../src/api/log';
 import cookies from 'next-cookies';
 import Link from 'next/link';
 import Slug from 'slug';
+import { useCookies } from 'react-cookie';
+import { useRouter } from 'next/router';
 
 const SearchResult = ({ logList }) => {
+    const router = useRouter();
     const setCookieLogId = (log_id) => {
         if (log_id) {
             const expDuration = new Date(
@@ -14,6 +17,36 @@ const SearchResult = ({ logList }) => {
             document.cookie = `log_id=${log_id}; expires=${expDuration}; path=/`;
         }
     };
+    const [page, setPage] = useState(1);
+    const [cookies, setCookie, removeCookie] = useCookies();
+    console.log('cookies :>> ', cookies);
+
+    const changePageCk = () => {
+        const curPage = parseInt(cookies.page);
+        setCookie('page', curPage + 1, {
+            path: '/',
+            expires: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
+        });
+    };
+    const moveToNextPage = () => {
+        const curPage = parseInt(cookies.page);
+        const query = router.query;
+        query.page = parseInt(curPage) + 1;
+        router.push({
+            pathname: router.pathname,
+            query: query,
+        });
+    };
+    useEffect(() => {
+        return () => {
+            setCookie('page', 1, {
+                path: '/',
+                expires: new Date(
+                    new Date().getTime() + 30 * 24 * 60 * 60 * 1000
+                ),
+            });
+        };
+    }, []);
     return (
         <div>
             <div>
@@ -23,6 +56,7 @@ const SearchResult = ({ logList }) => {
                 {logList?.map((log, index) => {
                     return (
                         <div key={index}>
+                            <h5 className="text-danger">{log?.id}</h5>
                             <h5>{log?.username}</h5>
                             <Link
                                 href={`/demos/search-result/${Slug(
@@ -37,20 +71,30 @@ const SearchResult = ({ logList }) => {
                     );
                 })}
             </div>
+            <button
+                className="btn btn-primary"
+                onClick={() => moveToNextPage()}
+            >
+                Xem thêm
+            </button>
         </div>
     );
 };
 
 export async function getServerSideProps(ctx) {
+    console.log('ctx :>> ', ctx);
     const allCookies = cookies(ctx);
+    const { action, page, limit } = ctx.query;
     if (allCookies) {
         const data = {
             params: {
-                action: allCookies.action,
-                limit: 10,
+                action,
+                limit,
+                page: page,
             },
             body: {},
         };
+        console.log('data :>> ', data);
         const response = await Log.getLogList(data);
         if (response) {
             return {

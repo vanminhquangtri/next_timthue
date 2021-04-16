@@ -1,3 +1,7 @@
+// log detail api params:
+// id : from cookie (added from page search-result)
+// action: from cookie (added from page search)
+
 import React from 'react';
 import { connect } from 'react-redux';
 import Log from '../../../src/api/log';
@@ -20,12 +24,13 @@ const SearchResultDetail = ({ log }) => {
 };
 
 export async function getServerSideProps(ctx) {
+    console.log('ctx :>> ', ctx);
     const allCookies = cookies(ctx);
     if (allCookies) {
         const data = {
             params: {
                 action: allCookies.action,
-                limit: 10,
+                limit: 1,
                 id: allCookies.log_id,
             },
             body: {},
