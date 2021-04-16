@@ -3,42 +3,45 @@ import { connect } from 'react-redux';
 import Log from '../../../src/api/log';
 import cookies from 'next-cookies';
 
-const SearchResultDetail = ({ logList }) => {
-    console.log('logList :>> ', logList);
+const SearchResultDetail = ({ log }) => {
+    console.log('log :>> ', log);
     return (
         <div>
-            <div>Search Result</div>
             <div>
-                {logList?.map((log, index) => {
-                    return <h5 key={index}>{log?.username}</h5>;
-                })}
+                <h2>Result Detail</h2>
+            </div>
+            <div>
+                <h6>{log?.id}</h6>
+                <h6>{log?.username}</h6>
+                <h5 className="text-primary">{log?.description}</h5>
             </div>
         </div>
     );
 };
 
-SearchResultDetail.getInitialProps = async (ctx) => {
+export async function getServerSideProps(ctx) {
     const allCookies = cookies(ctx);
-    console.log('allCookies :>> ', allCookies);
     if (allCookies) {
         const data = {
             params: {
                 action: allCookies.action,
                 limit: 10,
+                id: allCookies.log_id,
             },
             body: {},
         };
-        console.log('data :>> ', data);
         const response = await Log.getLogList(data);
-        console.log('response :>> ', response);
         if (response) {
+            const log = response.data.find((log) => {
+                return log.id == allCookies.log_id;
+            });
             return {
                 props: {
-                    logList: response.data,
+                    log,
                 },
             };
         }
     }
-};
+}
 
 export default connect((state) => state)(SearchResultDetail);

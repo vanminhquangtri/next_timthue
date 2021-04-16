@@ -20,7 +20,7 @@ const makeStore = (context) => createStore(reducer);
 
 // export an assembled wrapper
 const wrapperConfig = {
-    debug: true,
+    debug: false,
     storeKey: 'timthue',
 };
 export const wrapper = createWrapper(makeStore, wrapperConfig);

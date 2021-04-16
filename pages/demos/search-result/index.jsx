@@ -4,11 +4,8 @@ import Log from '../../../src/api/log';
 import cookies from 'next-cookies';
 import Link from 'next/link';
 import Slug from 'slug';
-import { useRouter } from 'next/router';
-import * as cookie from 'cookie';
 
 const SearchResult = ({ logList }) => {
-    const router = useRouter();
     const setCookieLogId = (log_id) => {
         if (log_id) {
             const expDuration = new Date(
@@ -19,7 +16,9 @@ const SearchResult = ({ logList }) => {
     };
     return (
         <div>
-            <div>Search Result</div>
+            <div>
+                <h2>Search Result</h2>
+            </div>
             <div>
                 {logList?.map((log, index) => {
                     return (
@@ -44,7 +43,6 @@ const SearchResult = ({ logList }) => {
 
 export async function getServerSideProps(ctx) {
     const allCookies = cookies(ctx);
-    console.log('allCookies :>> ', allCookies);
     if (allCookies) {
         const data = {
             params: {
@@ -53,9 +51,7 @@ export async function getServerSideProps(ctx) {
             },
             body: {},
         };
-        console.log('data :>> ', data);
         const response = await Log.getLogList(data);
-        console.log('response :>> ', response);
         if (response) {
             return {
                 props: {

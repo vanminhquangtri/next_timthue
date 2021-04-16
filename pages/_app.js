@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import Head from 'next/head';
 import { wrapper } from 'src/next-store';
 import App from 'next/app';
+import Header from 'src/layout/Header';
 
 class MyApp extends App {
     static getInitialProps = async ({ Component, ctx }) => {
@@ -50,7 +51,10 @@ class MyApp extends App {
                         crossOrigin="anonymous"
                     ></script>
                 </Head>
-                <Component {...pageProps} />
+                <Header />
+                <main className="mt-3 p-2">
+                    <Component {...pageProps} />
+                </main>
             </>
         );
     }
