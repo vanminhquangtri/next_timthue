@@ -23,7 +23,7 @@ const Search = () => {
             const expDuration = new Date(
                 new Date().getTime() + 30 * 24 * 60 * 60 * 1000
             );
-            document.cookie = `action=${data.action}; expires=${expDuration}`;
+            document.cookie = `action=${data.action}; expires=${expDuration}; path =/`;
             const cfg = {
                 url: 'https://api.autogolike.net/api/logs',
                 method: 'get',

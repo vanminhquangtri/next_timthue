@@ -14,7 +14,7 @@ const SearchResult = ({ logList }) => {
             const expDuration = new Date(
                 new Date().getTime() + 30 * 24 * 60 * 60 * 1000
             );
-            document.cookie = `log_id=${log_id}; expires=${expDuration}`;
+            document.cookie = `log_id=${log_id}; expires=${expDuration}; path=/`;
         }
     };
     return (
@@ -43,8 +43,6 @@ const SearchResult = ({ logList }) => {
 };
 
 export async function getServerSideProps(ctx) {
-    const parsedCookies = cookie.parse(ctx.req.headers.cookie);
-    console.log('parsedCookies :>> ', parsedCookies);
     const allCookies = cookies(ctx);
     console.log('allCookies :>> ', allCookies);
     if (allCookies) {
