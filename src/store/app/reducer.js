@@ -5,7 +5,7 @@ const appState = {
 
 const appReducer = (state = appState, action) => {
     switch (action.type) {
-        case 'APP_SET_LOADING':
+        case 'SET_APP_LOADING':
             return { ...state, loading: action.payload };
         case 'SET_SIGNED_IN':
             return { ...state, signed_in: action.payload };

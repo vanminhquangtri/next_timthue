@@ -82,7 +82,6 @@ const SearchResult = ({ logList }) => {
 };
 
 export async function getServerSideProps(ctx) {
-    console.log('ctx :>> ', ctx);
     const allCookies = cookies(ctx);
     const { action, page, limit } = ctx.query;
     if (allCookies) {
@@ -94,7 +93,6 @@ export async function getServerSideProps(ctx) {
             },
             body: {},
         };
-        console.log('data :>> ', data);
         const response = await Log.getLogList(data);
         if (response) {
             return {
