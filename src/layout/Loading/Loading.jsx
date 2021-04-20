@@ -1,6 +1,5 @@
 import React from 'react';
 import Images from 'src/constants/images';
-import Image from 'next/image';
 import styles from './Loading.module.scss';
 
 const Loading = () => {

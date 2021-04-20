@@ -2,14 +2,13 @@ import '../styles/globals.css';
 import Head from 'next/head';
 import Header from 'src/layout/Header';
 import { Provider } from 'react-redux';
-import { persistor, store, makeStore } from 'src/store';
-import { PersistGate } from 'redux-persist/integration/react';
+import { store } from 'src/store';
 import { wrapper } from '../src/store/index';
+import MyAppWithRedux from './app_redux';
 
 function MyApp({ Component, pageProps }) {
     return (
         <Provider store={store}>
-            {/* <PersistGate persistor={persistor} loading={null}> */}
             <Head>
                 <meta charSet="utf-8" />
                 <meta
@@ -39,10 +38,7 @@ function MyApp({ Component, pageProps }) {
                 ></script>
             </Head>
             <Header />
-            <main>
-                <Component {...pageProps} />
-            </main>
-            {/* </PersistGate> */}
+            <MyAppWithRedux pageProps={pageProps} Component={Component} />
         </Provider>
     );
 }

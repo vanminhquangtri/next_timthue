@@ -52,17 +52,6 @@ const Search = () => {
                         onChange={(ev) => changeData(ev)}
                     />
                 </div>
-                {/* <div className="form-group">
-                    <label htmlFor="exampleInputPassword1">Password</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Password"
-                        name="password"
-                        onChange={(ev) => changeData(ev)}
-                    />
-                </div> */}
-
                 <button type="submit" className="btn btn-primary">
                     Submit
                 </button>

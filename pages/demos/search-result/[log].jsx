@@ -8,7 +8,6 @@ import Log from '../../../src/api/log';
 import cookies from 'next-cookies';
 
 const SearchResultDetail = ({ log }) => {
-    console.log('log :>> ', log);
     return (
         <div>
             <div>
@@ -24,7 +23,6 @@ const SearchResultDetail = ({ log }) => {
 };
 
 export async function getServerSideProps(ctx) {
-    console.log('ctx :>> ', ctx);
     const allCookies = cookies(ctx);
     if (allCookies) {
         const data = {

@@ -6,30 +6,35 @@ import Link from 'next/link';
 import Slug from 'slug';
 import { useCookies } from 'react-cookie';
 import { useRouter } from 'next/router';
+import Texts from 'src/constants/texts';
 
-const SearchResult = ({ logList }) => {
+const SearchResult = ({ logList, limit }) => {
+    console.log('limit :>> ', limit);
     const router = useRouter();
     const setCookieLogId = (log_id) => {
         if (log_id) {
             const expDuration = new Date(
-                new Date().getTime() + 30 * 24 * 60 * 60 * 1000
+                new Date().getTime() + Texts.expired_time_cookie
             );
             document.cookie = `log_id=${log_id}; expires=${expDuration}; path=/`;
         }
     };
     const [page, setPage] = useState(1);
     const [cookies, setCookie, removeCookie] = useCookies();
-    console.log('cookies :>> ', cookies);
 
     const changePageCk = () => {
         const curPage = parseInt(cookies.page);
         setCookie('page', curPage + 1, {
             path: '/',
-            expires: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
+            expires: new Date(new Date().getTime() + Texts.expired_time_cookie),
         });
     };
     const moveToNextPage = () => {
         const curPage = parseInt(cookies.page);
+        setCookie('page', curPage + 1, {
+            path: '/',
+            expires: new Date(new Date().getTime() + Texts.expired_time_cookie),
+        });
         const query = router.query;
         query.page = parseInt(curPage) + 1;
         router.push({
@@ -42,7 +47,7 @@ const SearchResult = ({ logList }) => {
             setCookie('page', 1, {
                 path: '/',
                 expires: new Date(
-                    new Date().getTime() + 30 * 24 * 60 * 60 * 1000
+                    new Date().getTime() + Texts.expired_time_cookie
                 ),
             });
         };
@@ -71,12 +76,14 @@ const SearchResult = ({ logList }) => {
                     );
                 })}
             </div>
-            <button
-                className="btn btn-primary"
-                onClick={() => moveToNextPage()}
-            >
-                Xem thêm
-            </button>
+            {logList.length >= limit && (
+                <button
+                    className="btn btn-primary"
+                    onClick={() => moveToNextPage()}
+                >
+                    Xem thêm
+                </button>
+            )}
         </div>
     );
 };
@@ -98,6 +105,7 @@ export async function getServerSideProps(ctx) {
             return {
                 props: {
                     logList: response.data,
+                    limit,
                 },
             };
         }
