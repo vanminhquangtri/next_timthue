@@ -1,6 +1,5 @@
 const appAction = {
     SET_APP_LOADING: (payload) => {
-        console.log(`payload`, payload);
         return {
             type: 'SET_APP_LOADING',
             payload: payload,
