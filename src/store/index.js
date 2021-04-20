@@ -5,7 +5,7 @@ import RootReducer from './root-reducer';
 import { createWrapper } from 'next-redux-wrapper';
 
 const persistConfig = {
-    key: 'vm',
+    key: 'timthue',
     storage,
 };
 
