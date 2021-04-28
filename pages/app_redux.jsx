@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import appAction from 'src/store/app/action';
 import Loading from 'src/layout/Loading/Loading';
-// import Loading from 'src/components/reuse/loading';
+import { useCookies } from 'react-cookie';
 
 function MyAppWithRedux({ Component, pageProps }) {
     const dispatch = useDispatch();

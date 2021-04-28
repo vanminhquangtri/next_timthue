@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import Log from '../../../src/api/log';
-import cookies from 'next-cookies';
-import cookie from 'cookie';
+import cookies from 'next-cookies'; // lib này để get cookie trong SSR
+import cookie from 'cookie'; // lib này để set cookie trong SSR
 import Link from 'next/link';
 import Slug from 'slug';
-import { useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie'; // lib này có chức năng set cookie trong useffect
 import { useRouter } from 'next/router';
 import Texts from 'src/constants/texts';
+import { useCookie } from 'next-cookie';
 
 const SearchResult = ({ logList, limit }) => {
     const router = useRouter();
@@ -59,7 +60,7 @@ const SearchResult = ({ logList, limit }) => {
         };
     }, []);
     return (
-        <div>
+        <div className="p-5">
             <div>
                 <h2>Search Result</h2>
             </div>
@@ -95,7 +96,12 @@ const SearchResult = ({ logList, limit }) => {
 };
 
 export async function getServerSideProps(ctx) {
-    // get data from url
+    const cookie = useCookie(ctx);
+    const cookieValues = cookie.cookie.cookies;
+    const cookieOptions = {
+        path: '/',
+        expires: new Date(new Date().getTime() + Texts.expired_time_cookie),
+    };
     const { action, page, limit } = ctx.query;
     const data = {
         params: {
@@ -105,43 +111,21 @@ export async function getServerSideProps(ctx) {
         },
         body: {},
     };
-    const allCookies = cookies(ctx);
-    const currentLogListCookie = allCookies?.current_log_list || [];
-    console.log('currentLogListCookie :>> ', currentLogListCookie);
-
+    const curLogs = cookieValues.current_log_list
+        ? JSON.parse(cookieValues.current_log_list)
+        : [];
+    console.log('curLogs :>> ', curLogs);
     const response = await Log.getLogList(data);
-
-    // add new list of logs to current cookie, prepare for next api request
-    if (response?.success && response?.data?.length) {
-        await response?.data?.forEach((log) => {
-            currentLogListCookie.push(log);
-        });
-        // const newFullCookieLogList =
-        //     currentLogListCookie?.length > 0
-        //         ? [...currentLogListCookie, ...response?.data]
-        //         : response?.data;
-        // console.log('newFullCookieLogList :>> ', newFullCookieLogList);
-        console.log('currentLogListCookie :>> ', currentLogListCookie);
-        ctx.res.setHeader(
-            'Set-Cookie',
-            cookie.serialize(
-                'current_log_list',
-                JSON.stringify(currentLogListCookie),
-                {
-                    maxAge: Texts.expired_time_cookie / 1000,
-                    path: '/',
-                }
-            )
-        );
-    }
     if (response?.success) {
-        const fullLog =
-            currentLogListCookie?.length > 0
-                ? [...currentLogListCookie, ...response?.data]
-                : response?.data;
+        cookie.set(
+            `current_log_list`,
+            JSON.stringify(curLogs.concat(response?.data)),
+            cookieOptions
+        );
+        console.log('curLogs :>> ', curLogs);
         return {
             props: {
-                logList: fullLog,
+                logList: [...curLogs, ...response?.data],
                 limit,
             },
         };

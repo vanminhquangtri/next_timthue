@@ -41,7 +41,7 @@ const Search = () => {
         });
     };
     return (
-        <div>
+        <div className="p-5">
             <form onSubmit={(e) => Find(e)}>
                 <div className="form-group">
                     <label htmlFor="exampleInputEmail1">Name</label>
